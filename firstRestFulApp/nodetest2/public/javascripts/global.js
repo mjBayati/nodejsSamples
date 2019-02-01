@@ -85,7 +85,7 @@ function showUserInfo(event){
           populateTable();        
         }
         else{
-          alert('Error: ', res.msg);
+          alert('Error::', res.msg);
         }
       });
     }
