@@ -8,6 +8,8 @@ $(document).ready(function() {
   populateTable();
 
   $('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
+
+  $('#btnAddUser').on('click', addUser);
 });
 
 // Functions =============================================================
@@ -52,4 +54,43 @@ function showUserInfo(event){
     $('#userInfoAge').text(currentUserObjects.age);
     $('#userInfoGender').text(currentUserObjects.gender);
     $('#userInfoLocation').text(currentUserObjects.location);
+  };
+
+  function addUser(event){
+    event.preventDefault();
+
+    var errcount = 0;
+    $('#addUser input').each(function(index, val){
+      if($(this).val === ''){
+        errcount ++;
+      }
+    });
+    if(errcount === 0){
+      var newUser = {
+        'username': $('#addUser fieldset input#inputUserName').val(),
+        'email': $('#addUser fieldset input#inputUserEmail').val(),
+        'fullname': $('#addUser fieldset input#inputUserFullname').val(),
+        'age': $('#addUser fieldset input#userAge').val(),
+        'location': $('#addUser fieldset input#userLocation').val(),
+        'gender': $('#addUser fieldset input#userGender').val(),
+      }
+      $.ajax({
+        type: 'POST',
+        data: newUser,
+        url: '/users/addUser',
+        dataType: 'JSON' 
+      }).done(function(res){
+        if(res.msg === ''){
+          $('#addUser fieldset input').val('');
+          populateTable();        
+        }
+        else{
+          alert('Error: ', res.msg);
+        }
+      });
+    }
+    else{
+      alert('all inputs required to be filled');
+
+    }
   };
