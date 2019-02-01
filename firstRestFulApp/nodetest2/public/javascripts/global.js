@@ -10,6 +10,8 @@ $(document).ready(function() {
   $('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
 
   $('#btnAddUser').on('click', addUser);
+
+  $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
 });
 
 // Functions =============================================================
@@ -44,11 +46,11 @@ function showUserInfo(event){
     var userName = $(this).attr('rel');  
     var userArrayIndex = userListData.map(function(arrayItem){ return arrayItem.username;}).indexOf(userName);
 
-    console.log('+++',userListData);
+    // console.log('+++',userListData);
 
     var currentUserObjects = userListData[userArrayIndex];
 
-    console.log('-----',currentUserObjects);
+    // console.log('-----',currentUserObjects);
 
     $('#userInfoName').text(currentUserObjects.fullname);
     $('#userInfoAge').text(currentUserObjects.age);
@@ -91,6 +93,27 @@ function showUserInfo(event){
     }
     else{
       alert('all inputs required to be filled');
-
     }
   };
+
+function deleteUser(event){
+  event.preventDefault();
+  console.log('+++');
+  var confirmation = confirm('are you sure to delete this user?');
+  if (confirmation === true){
+    $.ajax({
+      type: 'DELETE',
+      url: 'users/deleteUser/' + $(this).attr('rel')
+    }).done(function(res){
+      if(res.msg === ''){
+        populateTable()
+      }
+      else{
+        alert('try again deleting can not be down');
+      }
+    }); 
+  }
+  else{
+    //do nothing
+  }
+};
