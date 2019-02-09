@@ -11,13 +11,18 @@ const io = require('socket.io')();
 const socketAuth = require('socketio-auth');
 const adapter = require('socket.io-redis');
 
-// const redis = require('./redis');
+const redis = require('./redis/redis.js');
 const PORT = process.env.PORT || 8080;
 
-// const redisAdapter = adapter({    
-// })
+const redisAdapter = adapter({    
+    host: process.env.REDIS_HOST || 'localhost',
+    port: process.env.REDIS_PORT || 6379,
+    password: process.env.REDIS_PASS || 'password',
+});
 
 io.attach(httpServer);
+io.adapter(redisAdapter);
+
 
 async function verifyUser (token) {
     return new promise((res, rej) => {
@@ -38,6 +43,12 @@ socketAuth(io, {
         const {token} = data;
         try {
             const user = await verifyUser(toekn);
+            const canConnect = await redis
+            .setAsync(`users: ${user.id}`, socket.id, 'NX', 'EX', 30);            socket.user = user;
+            
+            if(!canConnect){
+                return cb({message: 'already connected'});
+            }
             socket.user = user;
             return cb(null, true);
         }catch (err){
