@@ -28,14 +28,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/upload', (req, res, next) => {
-  // console.log('+++++',req.body.fileName);
-  // let imageFile = req.files.file;
+  console.log('+++++',req.body.fileName);
+  let imageFile = req.files.file;
 
-  console.log(req);
+  // console.log(req.body);
 
   imageFile.mv(`${__dirname}/public/${req.body.fileName}.jpg`, function(err){
     if (err){
-      console.log(err);
+      console.log('err', err);
       next();
     } 
     
@@ -43,7 +43,7 @@ app.post('/upload', (req, res, next) => {
   });
 });
 
-app.use('/', indexRouter);
+// app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

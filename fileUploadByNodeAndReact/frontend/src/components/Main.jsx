@@ -1,4 +1,5 @@
 import React from 'react';
+var FormData = require('form-data');
 
 class Main extends React.Component{
     constructor (props){
@@ -7,25 +8,27 @@ class Main extends React.Component{
         this.state = {
             imageUrl: ''
         };
-
+        this.fileName = '';
         this.handleImageUpload = this.handleImageUpload.bind(this);
     }
 
     handleImageUpload(event){
         event.preventDefault();
 
-        const data = new FormData();
-        data.append('file', this.uploadInput.files[0]);
-        data.append('fileName', this.fileName.value);
+        let mms = new FormData();
+        mms.append('file', this.uploadInput.files[0]);
+        mms.append('filename', this.fileName.value);
 
-        fetch('http://localhost:8000/upload', {
-            method: 'POST',
-            body: data,
-        }).then((response) => {
-            response.json().then((body) => {
-                this.setState({imageUrl: `http://localhost:8000/${body.file}`});
-            });
-        });
+        console.log(mms);
+
+        // fetch('http://localhost:8000/upload', {
+        //     method: 'POST',
+        //     body: data,
+        // }).then((response) => {
+        //     response.json().then((body) => {
+        //         this.setState({imageUrl: `http://localhost:8000/${body.file}`});
+        //     });
+        // });
     }
     
 
